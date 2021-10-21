@@ -21,7 +21,7 @@ func main() {
 
 	scanner := bufio.NewScanner(conn)
 	message := ""
-	if scanner.Scan() {
+	if scanner.Scan() { // Scan() ignores the new line
 		message = scanner.Text()
 		fmt.Println(message)
 	}

@@ -48,7 +48,7 @@ func main() {
 		writer.Flush()
 
 		num += len(scanner.Text())
-		print(line_counter, " ", num, " ", all, "\n")
+		//print(line_counter, " ", num, " ", all, "\n")
 		if num == all-line_counter {
 			break
 		}

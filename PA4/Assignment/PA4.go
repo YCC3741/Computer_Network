@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net"
 	"os"
-	// "strconv"
+	"strconv"
 )
 
 func check(e error) {
@@ -21,7 +21,6 @@ func main() {
 	defer ln.Close()
 	defer conn.Close()
 
-
 	scanner := bufio.NewScanner(conn)
 	original_size := ""
 	if scanner.Scan() { // Scan() ignores the new line
@@ -32,32 +31,30 @@ func main() {
 	f, err := os.Create("./whatever.txt")
 
 	check(err)
-    defer f.Close()
+	defer f.Close()
 
 	writer := bufio.NewWriter(f)
-	reader := bufio.NewReader(conn)
+	//reader := bufio.NewReader(conn)
 
-	
 	line_counter := 1
-	// for ok:=scanner.Scan(); ok ; scanner.Scan() {
-	// 	//fmt.Printf(strconv.Itoa(line_counter))
-	// 	print(ok, line_counter, scanner.Text(), "\n")
-	// 	newline := strconv.Itoa(line_counter) + " " + scanner.Text() + "\n"
-	// 	_, errw := writer.WriteString(newline)
-	// 	check(errw)
-	// 	writer.Flush()
-	// 	line_counter++
-	// 	//fmt.Printf(strconv.Itoa(line_counter))
-	// }
-	for {
-		line, err3 := reader.ReadString('\n')
-		if err3 != nil {
+	num := 0
+	all, _ := strconv.Atoi(original_size)
+	for scanner.Scan() {
+		//fmt.Printf(strconv.Itoa(line_counter))
+
+		newline := strconv.Itoa(line_counter) + " " + scanner.Text() + "\n"
+		_, errw := writer.WriteString(newline)
+		check(errw)
+		writer.Flush()
+
+		num += len(scanner.Text())
+		print(line_counter, " ", num, " ", all, "\n")
+		if num == all-line_counter {
 			break
 		}
-		writer.WriteString(fmt.Sprint("%d %s", line_counter, line))
 		line_counter++
+		//fmt.Printf(strconv.Itoa(line_counter))
 	}
-	
 
 	//fmt.Printf(strconv.Itoa(1))
 	f, err = os.Open("./whatever.txt")
@@ -66,7 +63,6 @@ func main() {
 	check(err_stat)
 	file_size := fmt.Sprint(file_status.Size()) // file_size
 	//fmt.Println(file_size)
-	
 
 	conn_writter := bufio.NewWriter(conn)
 	return_message := fmt.Sprintf("%s bytes received, %s bytes file generatedfile_size", original_size, file_size)
@@ -75,10 +71,4 @@ func main() {
 	conn_writter.Flush()
 	fmt.Printf("Output file size: %s\n", file_size)
 
-	
-
-
-
-
-	
 }
